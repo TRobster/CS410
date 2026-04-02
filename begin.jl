@@ -8,7 +8,7 @@ function fibonacciSeq(x)
     for i in 2:x
         sum = arr[i-1] + arr[i]
         push!(arr, sum)
-    end
+        end
     return arr
 end 
 n = 15
