@@ -1,7 +1,7 @@
 
 
 
-function forward(mat, n)
+function computeLUP(mat, n)
     
     L = zeros(n, n)
     P = collect(1:n)
@@ -30,7 +30,8 @@ function forward(mat, n)
                 end
             mat[i, k] = 0
         end
-    end     
+    end
+    return mat, L, P
 end 
 
 
@@ -41,3 +42,15 @@ function swap(mat, i, j, n)
         mat[j, k] = temp
     end
 end 
+
+function forward(l, b, n)
+    y = zeros(n)
+    sum = 0
+    for i in 1:n
+        for j in 1:i-1
+            sum = sum + l[i, j] * y[j]
+        end
+        y = b[i] - sum
+    end
+end 
+
