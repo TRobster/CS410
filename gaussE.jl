@@ -1,17 +1,17 @@
 
 function I(n)
-    id = zeros(n, n)
+    id = []
     for i in 1:n
-        id[i, i] = 1
+        id[i] = i
     end 
-    return id
-end 
+    return i 
+end
 
 function forward(mat, n)
     
     L = zeros(n, n)
+    P = I(n)
 
-    
     for k in 1:n-1 
         i_max = k 
         v_max = abs(mat[i_max, k])
