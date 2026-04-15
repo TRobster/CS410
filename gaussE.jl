@@ -10,7 +10,7 @@ end
 
 function computeLUP(mat, n)
     
-    L = zeros(n, n)
+    L = eye(n)
     P = collect(1:n)
 
     for k in 1:n-1 
@@ -53,11 +53,11 @@ end
 function forward(l, b, n)
     y = zeros(n)
     for i in 1:n
-        sum = 0
+        s = 0
         for j in 1:i-1
-            sum = sum + l[i, j] * y[j]
+            s = s + l[i, j] * y[j]
         end
-        y[i] = b[i] - sum
+        y[i] = b[i] - s
     end
     return y
 end 
@@ -65,11 +65,11 @@ end
 function backward(u, y, n)
     x = zeros(n)
     for i in n:-1:1
-        sum = 0 
+        s = 0 
         for j in i+1:n
-            sum = sum + u[i, j] * x[j]
+            s = s + u[i, j] * x[j]
         end 
-        x[i] = (y[i] - sum) / u[i, i]
+        x[i] = (y[i] - s) / u[i, i]
     end
     return x 
 end
@@ -85,9 +85,10 @@ end
 
 ### testing below 
 
-N = 10
+N = 3
 I = eye(N)
 B = rand(N, N)
 A = B' * B + I
-b = rand(N, 1)
-print("normal instance of A before solving ", A)
+b = rand(N)
+print("normal instance of A before solving ")
+display(A)
