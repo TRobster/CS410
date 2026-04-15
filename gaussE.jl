@@ -4,7 +4,7 @@ function I(n)
     for i in 1:n
         id[i] = i
     end 
-    return i 
+    return id
 end
 
 function forward(mat, n)
