@@ -1,5 +1,5 @@
 
-function I(n: Int64)
+function I(n)
     id = zeros(n, n)
     for i in 1:n
         id[i, i] = 1
