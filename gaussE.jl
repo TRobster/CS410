@@ -1,16 +1,10 @@
 
-function I(n)
-    id = []
-    for i in 1:n
-        id[i] = i
-    end 
-    return id
-end
+
 
 function forward(mat, n)
     
     L = zeros(n, n)
-    P = I(n)
+    P = collect(1:n)
 
     for k in 1:n-1 
         i_max = k 
@@ -25,10 +19,12 @@ function forward(mat, n)
 
         if i_max != k
             mat[k], mat[i_max] = mat[i_max], mat[k]
+            P[k], P[i_max] = P[i_max], P[k]
         end
 
         for i in k+1:n
             m = mat[i, k] / mat[k, k]
+            L[i, k] = m
             for j in k+1:n
                 mat[i, j] = mat[i, j] - mat[k, j] * m
                 end
