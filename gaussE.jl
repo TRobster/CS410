@@ -70,7 +70,7 @@ end
 
 function LUPsolve(A, b, n)
     l, u, p = computeLUP(A, n)
-    y = forward(l, b, n)
+    y = forward(l, b[p], n)
     x = backward(u, y, n)
     return x
 end
