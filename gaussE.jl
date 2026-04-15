@@ -45,12 +45,26 @@ end
 
 function forward(l, b, n)
     y = zeros(n)
-    sum = 0
     for i in 1:n
+        sum = 0
         for j in 1:i-1
             sum = sum + l[i, j] * y[j]
         end
         y = b[i] - sum
     end
+    return y
 end 
+
+function backward(u, y, n)
+    x = zeros(n)
+    for i in n:1
+        sum = 0 
+        for j in i+1:n
+            sum = sum + u[i, j] * x[j]
+        end 
+        x[j] = (y[i] - sum) / u[i, i]
+    end
+    return x 
+end
+        
 
