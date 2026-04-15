@@ -1,5 +1,12 @@
 
 
+function eye(n)
+    I = zeros(n, n)
+    for i in 1:n
+        I[i, i] = 1.0
+    end
+    return I
+end
 
 function computeLUP(mat, n)
     
@@ -74,3 +81,13 @@ function LUPsolve(A, b, n)
     x = backward(u, y, n)
     return x
 end
+
+
+### testing below 
+
+N = 10
+I = eye(N)
+B = rand(N, N)
+A = B' * B + I
+b = rand(N, 1)
+print("normal instance of A before solving ", A)
