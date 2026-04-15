@@ -11,15 +11,15 @@ function forward(mat, n)
         v_max = abs(mat[i_max, k])
         for i in k+1:n
             if (abs(mat[i, k]) > v_max)
-                v_max = mat[i, k]
+                v_max = abs(mat[i, k])
                 i_max = i
             end
         end
 
 
         if i_max != k
-            mat[k], mat[i_max] = mat[i_max], mat[k]
-            P[k], P[i_max] = P[i_max], P[k]
+            swap(mat, k, i_max, n)
+            P[k], P[i_max] = P[i_max], P[k] 
         end
 
         for i in k+1:n
@@ -34,4 +34,10 @@ function forward(mat, n)
 end 
 
 
-
+function swap(mat, i, j, n)
+    for k in 1:n
+        temp = mat[i, k]
+        mat[i, k] = mat[j, k]
+        mat[j, k] = temp
+    end
+end 
