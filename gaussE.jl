@@ -50,21 +50,27 @@ function forward(l, b, n)
         for j in 1:i-1
             sum = sum + l[i, j] * y[j]
         end
-        y = b[i] - sum
+        y[i] = b[i] - sum
     end
     return y
 end 
 
 function backward(u, y, n)
     x = zeros(n)
-    for i in n:1
+    for i in n:-1:1
         sum = 0 
         for j in i+1:n
             sum = sum + u[i, j] * x[j]
         end 
-        x[j] = (y[i] - sum) / u[i, i]
+        x[i] = (y[i] - sum) / u[i, i]
     end
     return x 
 end
-        
+    
 
+function LUPsolve(A, b, n)
+    l, u, p = computeLUP(A, n)
+    y = forward(l, b, n)
+    x = backward(u, y, n)
+    return x
+end
