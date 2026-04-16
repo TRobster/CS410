@@ -84,18 +84,10 @@ end
 
 
 ### testing below 
-
-N = 10
-I = eye(N)
-B = rand(N, N)
-A = B' * B + I
-b = rand(N)
-print("normal instance of A before solving ")
-display(A)
-print("normal instance of b-vector before solving ")
-display(b)
-print("solved ")
-display(LUPsolve(A, b, N))
-
-println("Residual A*x - b = ")
-display(A * x - b)
+for N in [10, 100, 1000]
+    local B = rand(N, N)
+    local A = B' * B + eye(N)
+    local b = rand(N)
+    println("N = $N")
+    @time LUPsolve(A, b, N)
+end
