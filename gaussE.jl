@@ -85,10 +85,12 @@ end
 
 ### testing below 
 
-N = 3
+N = 10
 I = eye(N)
 B = rand(N, N)
 A = B' * B + I
 b = rand(N)
 print("normal instance of A before solving ")
 display(A)
+print("normal instance of b-vector before solving ")
+display(b)
