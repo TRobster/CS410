@@ -76,7 +76,7 @@ end
     
 
 function LUPsolve(A, b, n)
-    l, u, p = computeLUP(A, n)
+    u, l, p = computeLUP(copy(A), n)
     y = forward(l, b[p], n)
     x = backward(u, y, n)
     return x
@@ -94,5 +94,8 @@ print("normal instance of A before solving ")
 display(A)
 print("normal instance of b-vector before solving ")
 display(b)
-print("solved")
+print("solved ")
 display(LUPsolve(A, b, N))
+
+println("Residual A*x - b = ")
+display(A * x - b)
