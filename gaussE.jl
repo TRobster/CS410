@@ -1,7 +1,8 @@
-inusi
+using Plots
 
 function eye(n)
-    I = zeros(n, n)
+    I = Matrix{Float64}(undef, n, n)
+    I .= 0
     for i in 1:n
         I[i, i] = 1.0
     end
@@ -38,7 +39,7 @@ function computeLUP(mat, n)
             mat[i, k] = 0
         end
     end
-    return mat, L, P
+    return L, mat, P
 end 
 
 
@@ -76,7 +77,7 @@ end
     
 
 function LUPsolve(A, b, n)
-    u, l, p = computeLUP(copy(A), n)
+    l, u, p = computeLUP(copy(A), n)
     y = forward(l, b[p], n)
     x = backward(u, y, n)
     return x
