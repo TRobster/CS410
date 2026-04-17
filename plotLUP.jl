@@ -1,3 +1,11 @@
+
+#=
+Author: Trevor Robbins
+Class: CS410
+Instructor: McLaughlin
+Project: Assignment 1
+=# 
+
 using Plots
 using Printf
 
@@ -9,8 +17,8 @@ const Ns = [10, 100, 1000]
 t_lup   = Float64[]
 t_solve = Float64[]
 
-# ── Timing ────────────────────────────────────────────────────────────────────
-# Call each function once first to absorb Julia's JIT compilation cost,
+# Timing
+# Quickly call functions to get rid of Julia's compilation time
 # then @time as required by the assignment.
 for N in Ns
     B = rand(N, N)
@@ -18,27 +26,27 @@ for N in Ns
     b = rand(N)
 
     # Warm-up (compile)
-    computeLUP(A)
-    LUP_solve(A, b)
+    computeLUP(A, N)
+    LUP_solve(A, b, N)
 
-    @printf "\n── N = %d ──────────────────────\n" N
+    @printf "\n   N = %d  \n" N
 
     println("computeLUP:")
-    @time computeLUP(A)
-    tL = @elapsed computeLUP(A)
+    @time computeLUP(A, N)
+    tL = @elapsed computeLUP(A, N)
 
     println("LUP_solve:")
-    @time LUP_solve(A, b)
-    tS = @elapsed LUP_solve(A, b)
+    @time LUP_solve(A, b, N)
+    tS = @elapsed LUP_solve(A, b, N)
 
     push!(t_lup,   tL)
     push!(t_solve, tS)
 end
 
-# ── O(N³) reference line anchored to first LUP measurement ───────────────────
+# O(N^3) reference line anchored to first LUP measurement 
 t_cubic = [t_lup[1] * (N / Ns[1])^3 for N in Ns]
 
-# ── Empirical slopes ──────────────────────────────────────────────────────────
+# Empirical slopes
 println("\nEmpirical log-log slopes (expect ≈ 3.0 for O(N³)):")
 for i in 1:length(Ns)-1
     s_lup   = (log10(t_lup[i+1])   - log10(t_lup[i]))   / (log10(Ns[i+1]) - log10(Ns[i]))
@@ -46,7 +54,7 @@ for i in 1:length(Ns)-1
     @printf "  N=%d → N=%d │ computeLUP: %.2f │ LUP_solve: %.2f\n" Ns[i] Ns[i+1] s_lup s_solve
 end
 
-# ── Plot ──────────────────────────────────────────────────────────────────────
+# Plotting
 p = plot(
     xscale    = :log10,
     yscale    = :log10,
@@ -62,7 +70,7 @@ p = plot(
 )
 
 plot!(p, Ns, t_cubic,
-    label       = "O(N³) reference",
+    label       = "O(N^3) reference",
     lw          = 2,
     ls          = :dash,
     color       = :steelblue,

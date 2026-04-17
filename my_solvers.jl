@@ -1,12 +1,10 @@
-using Plots
-
-
 #=
 Author: Trevor Robbins
 Class: CS410
 Instructor: McLaughlin
 Project: Assignment 1
 =# 
+
 function eye(n)
     #=
     Basic identity matrix generation function, 
@@ -116,7 +114,7 @@ function backward(u, y, n)
 end
     
 
-function LUPsolve(A, b, n)
+function LUP_solve(A, b, n)
     #=
     Params: A = Solvable SPD matrix with N x N entries 
             b = Solution vector that must satisfy Ax = b where we solve for x 
@@ -130,6 +128,7 @@ end
 
 
 ### testing below 
+#=
 for N in [10, 100, 1000]
     local B = rand(N, N)
     local A = B' * B + eye(N)
@@ -137,4 +136,4 @@ for N in [10, 100, 1000]
     println("N = $N")
     @time LUPsolve(A, b, N)
 end
-
+=#
