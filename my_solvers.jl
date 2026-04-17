@@ -1,5 +1,12 @@
 using Plots
 
+
+#=
+Author: Trevor Robbins
+Class: CS410
+Instructor: McLaughlin
+Project: Assignment 1
+=# 
 function eye(n)
     #=
     Basic identity matrix generation function, 
