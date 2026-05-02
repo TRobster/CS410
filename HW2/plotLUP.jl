@@ -124,6 +124,7 @@ end
 # O(N^3) reference, anchored to dense LU at smallest N
 t_cubic = [t_dense_lu[1] * (N / Ns[1])^3 for N in Ns]
 
+t_quad = [t_dense_lu[1] * (N / Ns[1])^2 for N in Ns]
 # Plotting
 p = plot(
     xscale    = :log10,
@@ -141,6 +142,9 @@ p = plot(
 
 plot!(p, Ns, t_cubic,
     label = "O(N^3) reference", lw = 2, ls = :dash, color = :gray)
+
+plot!(p, Ns, t_quad,
+    label = "O(N^2) reference", lw = 2, ls = :dash, color = :black)
 
 # Dense — warm tones
 plot!(p, Ns, t_dense_lu,
