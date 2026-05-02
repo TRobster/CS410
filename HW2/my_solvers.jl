@@ -2,7 +2,7 @@
 Author: Trevor Robbins
 Class: CS410
 Instructor: McLaughlin
-Project: Assignment 1
+Project: Assignment 2
 =# 
 
 using LinearAlgebra
@@ -128,6 +128,14 @@ function LUP_solve(A, b, n)
 end
 
 function conjugateGrad(A, b, n)
+    #=
+    Params: A = Solvable SPD matrix with N x N entries 
+            b = Solution vector that must satisfy Ax = b where we solve for x
+            n = Linear dimension of A
+    Use:
+    Given a linear system Ax = b where x is the unknown vector of variables, we can approach the solution (b) by approximating 
+    using an initial steepest descent.
+    =#
     x = zeros(n)
     r = copy(b)
     p = copy(r)
@@ -154,15 +162,84 @@ function conjugateGrad(A, b, n)
     end
     @warn "CG did not converge in $n iterations"
     return x
-end 
+end
 
 ### testing below 
-#=
-for N in [10, 100, 1000]
-    local B = rand(N, N)
-    local A = B' * B + eye(N)
-    local b = rand(N)
-    println("N = $N")
-    @time LUPsolve(A, b, N)
+
+# --- Problem setup ---
+N = 1000
+b = ones(N)
+
+# (a) DENSE
+println("    DENSE    ")
+
+# Build A directly in dense form (don't go through sparse first)
+A_dense = zeros(N, N)
+for i in 1:N
+    A_dense[i, i] = 2.0
+    if i > 1
+        A_dense[i, i-1] = -1.0
+        A_dense[i-1, i] = -1.0
+    end
 end
-=#
+
+# Warm up the JIT (first call always includes compilation time)
+lu(A_dense); F_warm = lu(A_dense); F_warm \ b
+
+# (i) LU factorization
+print("  (i)  LU factorization:    ")
+@time F_dense = lu(A_dense)
+
+# (ii) Forward/back substitution using the factorization
+print("  (ii) Forward/back solve:  ")
+@time x_dense = F_dense \ b
+
+# (iii) Your CG for comparison
+print("  (iii) CG:                 ")
+@time x_cg = conjugateGrad(A_dense, b, N)   # adjust args to match your signature
+
+println("  Memory for A_dense:  ", sizeof(A_dense), " bytes")
+println("  ‖x_dense - x_cg‖ = ", norm(x_dense - x_cg))
+
+
+
+# (b) SPARSE — built directly, NOT via sparse(A_dense)
+
+println("\n    SPARSE    ")
+
+# Build sparse A using COO triplets (I, J, V) — only stores the nonzeros
+I_idx = Int[]
+J_idx = Int[]
+V     = Float64[]
+for i in 1:N
+    push!(I_idx, i); push!(J_idx, i);   push!(V,  2.0)
+    if i > 1
+        push!(I_idx, i);   push!(J_idx, i-1); push!(V, -1.0)
+        push!(I_idx, i-1); push!(J_idx, i);   push!(V, -1.0)
+    end
+end
+A_sparse = sparse(I_idx, J_idx, V, N, N)
+
+# Warm up
+lu(A_sparse); F_warm_sp = lu(A_sparse); F_warm_sp \ b
+
+# (i) LU factorization
+print("  (i)  LU factorization:    ")
+@time F_sparse = lu(A_sparse)
+
+# (ii) Forward/back substitution
+print("  (ii) Forward/back solve:  ")
+@time x_sparse = F_sparse \ b
+
+# (iii) CG on the sparse matrix
+print("  (iii) CG:                 ")
+@time x_cg_sp = conjugateGrad(A_sparse, b, N)
+
+
+juliatotal_sparse_bytes = sizeof(A_sparse) +
+                     sizeof(A_sparse.colptr) +
+                     sizeof(A_sparse.rowval) +
+                     sizeof(A_sparse.nzval)
+println("  Memory for A_sparse: ", juliatotal_sparse_bytes, " bytes (struct only)")
+println("  Nonzeros stored:     ", nnz(A_sparse))
+println("  ‖x_sparse - x_cg‖ = ", norm(x_sparse - x_cg_sp))
