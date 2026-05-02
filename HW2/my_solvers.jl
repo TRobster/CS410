@@ -6,6 +6,8 @@ Project: Assignment 2
 =# 
 
 using LinearAlgebra
+using SparseArrays
+
 function eye(n)
     #=
     Basic identity matrix generation function, 
@@ -157,7 +159,7 @@ function conjugateGrad(A, b, n)
         α = rdotr_n/ dot(p, Ap)
         β = rdotr_n / rdotR
         p = r + β * p 
-        rdotR = rdotR_n
+        rdotR = rdotr_n
         
     end
     @warn "CG did not converge in $n iterations"
