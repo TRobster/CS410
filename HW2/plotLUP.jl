@@ -2,7 +2,7 @@
 Author: Trevor Robbins
 Class: CS410
 Instructor: McLaughlin
-Project: Assignment 1 — Dense vs Sparse LU vs CG
+Project: Assignment 2 — Dense vs Sparse LU vs CG
 =#
 
 using LinearAlgebra
