@@ -5,6 +5,7 @@ Instructor: McLaughlin
 Project: Assignment 1
 =# 
 
+using LinearAlgebra
 function eye(n)
     #=
     Basic identity matrix generation function, 
@@ -118,7 +119,7 @@ function LUP_solve(A, b, n)
     #=
     Params: A = Solvable SPD matrix with N x N entries 
             b = Solution vector that must satisfy Ax = b where we solve for x 
-            n = Linear dimension of 
+            n = Linear dimension of A
     =#
     l, u, p = computeLUP(copy(A), n)
     y = forward(l, b[p], n)
@@ -126,6 +127,34 @@ function LUP_solve(A, b, n)
     return x
 end
 
+function conjugateGrad(A, b, n)
+    x = zeros(n)
+    r = copy(b)
+    p = copy(r)
+    rdotR = dot(r, r)
+    α = (dot(r, r))/ dot(p, A*p)
+    ε = 1e-8
+
+    for k in 1:n-1
+        Ap = A*p
+        α = rdotR / dot(p, Ap)
+        x = x + α * p
+        r = r - α*Ap ## Put this AFTER x1 gets computed (i.e this will give you the same result as base-case!)
+
+        # Option 2: dot product, comparing squared values (faster)
+        rdotr_n = dot(r, r)        
+        if rdotr_n < ε^2
+            return x
+        end
+        α = rdotr_n/ dot(p, Ap)
+        β = rdotr_n / rdotR
+        p = r + β * p 
+        rdotR = rdotR_n
+        
+    end
+    @warn "CG did not converge in $n iterations"
+    return x
+end 
 
 ### testing below 
 #=
